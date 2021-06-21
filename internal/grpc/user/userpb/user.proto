@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package user;
+option go_package = "./internal/grpc/user/userpb";
+
+message User{
+    int64 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    string password = 5;
+    int64 role_id = 6;
+}
+
+message CreateUserRequest{
+    User user = 1;
+}
+
+message CreateUserResponse{
+    User user = 1;
+}
+
+service UserService{
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+}
