@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/LibenHailu/inventory_auth/internal/core/domain"
 	"github.com/LibenHailu/inventory_auth/internal/core/ports"
@@ -33,18 +34,21 @@ func NewUserPgxRepo(db *pgx.Conn) ports.UserRepository {
 // }
 
 //StoreUser stores user to the database
-func (userRepo *UserPgxRepo) StoreUser(ctx context.Context, user *domain.User) (*domain.User, []error) {
-	newUsr, err := userRepo.conn.Exec(ctx, user.FirstName, user.LastName, user.Email, user.Password, user.RoleID)
+func (userRepo *UserPgxRepo) StoreUser(ctx context.Context, user *domain.User) (*domain.User, error) {
+
+	fmt.Println("this is in store user")
+
+	newUsr, err := userRepo.conn.Exec(ctx, QueryInsertUser, user.FirstName, user.LastName, user.Email, user.Password, user.RoleID)
 
 	if err != nil {
-		return nil, []error{err}
+		return nil, err
 	}
 
 	if newUsr.RowsAffected() > 0 {
-		
+
 		return user, nil
 	}
-	return nil, []error{errors.New("Some thing went wrong")}
+	return nil, errors.New("Some thing went wrong")
 
 }
 
